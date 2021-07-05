@@ -19,6 +19,9 @@ divisibleBy5 n = modBy n 5 == 0
 prod : Int -> Int -> Int
 prod a b = a * b
 
+-- Currying
+prod5 = prod 5
+
 -- Anonymous functions
 
 -- Syntax:
@@ -38,16 +41,19 @@ numbers = [4, 5, 10, 32, 40, 201, 400]
 -- map f data ->
   -- Applies `f` on each element of `data` and generates a new structure
 strNums = L.map S.fromInt numbers
+zeros = L.map (\n -> 0) numbers
 
 -- filter : (a -> Bool) -> List a -> List a
 -- filter p data ->
   -- Filter `data` where `p` is `True`
+overTen = L.filter (\n -> n > 10) numbers
 allDivisibleBy5 = L.filter divisibleBy5 numbers
 
 -- foldl : (a -> b -> b) -> b -> List a -> b
 -- foldl f init data | foldr f init data ->
   -- Folds `data` starting with `init` and applyting `f` on each pair
 totalProd = L.foldl prod 0 numbers
+acc = L.foldl (\x y -> x + y) 0 numbers
 
 --- If statements
 addHash : String -> String
@@ -56,14 +62,38 @@ addHash str =
   then str
   else "#" ++ str
 
---- Pattern matching
+-- Pattern matching
 type TrafficLight
+--- On Unit types
   = Red
   | Yellow
   | Green
+
 
 canIContinue : TrafficLight -> Bool
 canIContinue tfl =
   case tfl of
     Green -> True
     _ -> False
+
+--- On primitive types
+
+fizzBuzz : Int -> String
+fizzBuzz n =
+  case (modBy n 3 == 0, modBy n 5 == 0) of
+    (True, False) -> "Fizz"
+    (False, True) -> "Buzz"
+    (True, True) -> "FizzBzz"
+    _ -> S.fromInt n
+
+--- On records
+type alias User =
+  { name : String
+  , hasLoggedIn : Bool
+  }
+
+loginMessage : User -> String
+loginMessage { hasLoggedIn, name } =
+    if hasLoggedIn
+    then name ++ " has logged in"
+    else "Please, log in"
