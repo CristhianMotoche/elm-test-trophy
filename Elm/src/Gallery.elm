@@ -1,5 +1,6 @@
 module Gallery exposing (..)
 
+import Http
 import Html as H
 import Html.Events as HE
 import Browser as B
@@ -10,6 +11,8 @@ import Json.Encode as E
 type alias Model =
   { books: List Book
   , start : Int
+  , errors : List String
+  , loading : Bool
   }
 
 type AuthorName
@@ -53,38 +56,29 @@ authorNameEncoder an =
     _ -> E.null
 
 
+-- HTTP
+
+getBooks : Cmd Msg
+getBooks =
+  Http.get
+  { url = "http://localhost:3000/books"
+  , expect = Http.expectJson GetBooks (D.list bookDecoder)
+  }
+
 -- Init
 
-init : Model
+init : (Model, Cmd Msg)
 init =
-  { books = [
-    { title = "Iliada"
-    , synopsis = "La batalla entre aqueos y troyanos"
-    , author = Name "Homero"
-    },
-    { title = "Odisea"
-    , synopsis = "Las aventuras de Odiseo en su camino a Ítaca desde Troya"
-    , author = Name "Homero"
-    },
-    { title = "El libro que nunca escribí"
-    , synopsis = "Habla sobre las cosas que nunca dije y las letras que no escribí"
-    , author = Anonymous
-    },
-    { title = "La rebelión de la granja"
-    , synopsis = "¿Cómo terminará la rebelión de los animales?"
-    , author = Name "George Orwell"
-    },
-    { title = "Un mundo feliz"
-    , synopsis = "El mundo ideal donde todos son felices, ¿o no?"
-    , author = Name "Aldous Huxley"
-    }
-  ]
+  ({ books = []
   , start = 0
-  }
+  , errors = []
+  , loading = True
+  }, getBooks )
 
 type Msg
   = Next
   | Prev
+  | GetBooks (Result Http.Error (List Book))
 
 slice : Int -> Int -> List a -> List a
 slice start end list =
@@ -97,7 +91,10 @@ view : Model -> H.Html Msg
 view model =
   H.div
     []
-    <| List.map viewBook (slice model.start (model.start + 3) model.books) ++ [viewActions]
+    <|
+    if model.loading
+    then [ H.text "Loading..." ]
+    else List.map viewBook (slice model.start (model.start + 3) model.books) ++ [viewActions]
 
 viewActions : H.Html Msg
 viewActions =
@@ -124,26 +121,36 @@ authorToString author =
 
 
 -- Update
-update : Msg -> Model -> Model
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     Next ->
-      { model | start =
-          if model.start < List.length model.books - 3
-          then model.start + 1
-          else model.start
-      }
+      ({ model | start =
+        if model.start < List.length model.books - 3
+           then model.start + 1
+           else model.start
+      }, Cmd.none)
     Prev ->
-      { model | start =
-          if model.start > 0
-          then model.start - 1
-          else model.start
-      }
+      ({ model | start =
+        if model.start > 0
+           then model.start - 1
+           else model.start
+       }, Cmd.none)
+    GetBooks (Ok books)->
+      ({ model
+       | books = books, errors = [], loading = False }
+       , Cmd.none)
+    GetBooks _->
+      ({ model
+       | books = [], errors = ["Could not get books"], loading = False }
+       , Cmd.none)
+
 
 main : Program () Model Msg
 main =
-  B.sandbox
-    { init = init
+  B.element
+    { init = \_ -> init
     , update = update
     , view = view
+    , subscriptions = \_ -> Sub.none
     }
