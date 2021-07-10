@@ -3,6 +3,8 @@ module Gallery exposing (..)
 import Html as H
 import Html.Events as HE
 import Browser as B
+import Json.Decode as D
+import Json.Encode as E
 
 -- Model
 type alias Model =
@@ -19,6 +21,39 @@ type alias Book =
   , synopsis : String
   , author : AuthorName
   }
+
+-- JSON
+
+bookDecoder : D.Decoder Book
+bookDecoder =
+  D.map3 Book
+    (D.field "title" D.string)
+    (D.field "synopsis" D.string)
+    (D.field "author" authorNameDecoder)
+
+authorNameDecoder : D.Decoder AuthorName
+authorNameDecoder =
+  D.oneOf
+    [ D.map Name D.string
+    , D.null Anonymous
+    ]
+
+bookEncoder : Book -> E.Value
+bookEncoder book =
+  E.object
+    [ ("title", E.string book.title)
+    , ("synopsis", E.string book.synopsis)
+    , ("author", authorNameEncoder book.author)
+    ]
+
+authorNameEncoder : AuthorName -> E.Value
+authorNameEncoder an =
+  case an of
+    Name name -> E.string name
+    _ -> E.null
+
+
+-- Init
 
 init : Model
 init =
