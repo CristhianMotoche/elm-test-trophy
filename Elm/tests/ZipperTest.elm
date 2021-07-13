@@ -1,8 +1,9 @@
 module ZipperTest exposing(..)
 
 import Zipper exposing (Zip, watchList, next, prev, listNext, listPrev)
-import Test exposing (Test, describe, test)
+import Test exposing (Test, describe, test, fuzz)
 import Expect as E
+import Fuzz as F
 
 
 empty = watchList []
@@ -50,11 +51,27 @@ moveSuite =
   [ describe "given a non-empty zipper"
     [ test "going prev and next" <|
       \_ ->
-        next zipper
+        watchList [1,2,3]
         |> next
         |> next
         |> prev
-        |> listPrev
-        |> E.equal [1, 2]
+        |> \z ->
+          E.true "adds elments to both lists" <|
+          listPrev z == [1] && listNext z == [3]
     ]
+  ]
+
+
+fuzzyTest : Test
+fuzzyTest =
+  describe "prev and zip"
+  [ fuzz (F.list F.int)
+    "going the same prev and next steps generates the same zipper" <|
+    \list ->
+      watchList list
+      |> next
+      |> next
+      |> prev
+      |> prev
+      |> E.equal (watchList list)
   ]
