@@ -25,6 +25,25 @@ type alias Book =
   , author : AuthorName
   }
 
+-- Eff
+
+type Eff
+  = NoOp
+  | GetBookList
+    { url: String
+    , onResult: Result Http.Error (List Book) -> Msg
+    }
+
+run : Eff -> Cmd Msg
+run eff =
+  case eff of
+    NoOp -> Cmd.none
+    GetBookList { url, onResult } ->
+      Http.get
+      { url = url
+      , expect = Http.expectJson onResult (D.list bookDecoder)
+      }
+
 -- JSON
 
 bookDecoder : D.Decoder Book
@@ -58,16 +77,16 @@ authorNameEncoder an =
 
 -- HTTP
 
-getBooks : Cmd Msg
+getBooks : Eff
 getBooks =
-  Http.get
+  GetBookList
   { url = "http://localhost:3000/books"
-  , expect = Http.expectJson GetBooks (D.list bookDecoder)
+  , onResult = GetBooks
   }
 
 -- Init
 
-init : (Model, Cmd Msg)
+init : (Model, Eff)
 init =
   ({ books = []
   , start = 0
@@ -92,9 +111,10 @@ view model =
   H.div
     []
     <|
-    if model.loading
-    then [ H.text "Loading..." ]
-    else List.map viewBook (slice model.start (model.start + 3) model.books) ++ [viewActions]
+    case (model.loading, model.errors) of
+      (True, _) -> [ H.text "Loading..." ]
+      (_, []) -> List.map viewBook (slice model.start (model.start + 3) model.books) ++ [viewActions]
+      (_, errors) -> List.map H.text errors
 
 viewActions : H.Html Msg
 viewActions =
@@ -121,7 +141,7 @@ authorToString author =
 
 
 -- Update
-update : Msg -> Model -> (Model, Cmd Msg)
+update : Msg -> Model -> (Model, Eff)
 update msg model =
   case msg of
     Next ->
@@ -129,28 +149,30 @@ update msg model =
         if model.start < List.length model.books - 3
            then model.start + 1
            else model.start
-      }, Cmd.none)
+      }, NoOp)
     Prev ->
       ({ model | start =
         if model.start > 0
            then model.start - 1
            else model.start
-       }, Cmd.none)
+       }, NoOp)
     GetBooks (Ok books)->
       ({ model
        | books = books, errors = [], loading = False }
-       , Cmd.none)
+       , NoOp)
     GetBooks _->
       ({ model
        | books = [], errors = ["Could not get books"], loading = False }
-       , Cmd.none)
-
+       , NoOp)
 
 main : Program () Model Msg
 main =
   B.element
-    { init = \_ -> init
-    , update = update
+    { init =
+        \_ -> init |> Tuple.mapSecond run
+    , update =
+        \model msg ->
+          update model msg |> Tuple.mapSecond run
     , view = view
     , subscriptions = \_ -> Sub.none
     }
