@@ -113,7 +113,11 @@ view model =
     <|
     case (model.loading, model.errors) of
       (True, _) -> [ H.text "Loading..." ]
-      (_, []) -> List.map viewBook (slice model.start (model.start + 3) model.books) ++ [viewActions]
+      (_, []) ->
+        if List.isEmpty model.books
+        then [ H.text "No books" ]
+        else List.map viewBook (slice model.start (model.start + 3) model.books)
+              ++ [viewActions]
       (_, errors) -> List.map H.text errors
 
 viewActions : H.Html Msg

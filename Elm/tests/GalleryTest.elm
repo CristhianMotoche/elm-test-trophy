@@ -49,5 +49,15 @@ galleryTest =
            "http://localhost:3000/books"
            (JE.encode 0 <| JE.list G.bookEncoder [fixture])
         |> PT.expectViewHas [ S.text fixture.title ]
+    ],
+    describe "when API returns an empty list"
+    [ test "shows message" <|
+      \_ ->
+        start
+        |> PT.simulateHttpOk
+           "GET"
+           "http://localhost:3000/books"
+           (JE.encode 0 <| JE.list G.bookEncoder [])
+        |> PT.expectViewHas [ S.text "No books" ]
     ]
   ]
