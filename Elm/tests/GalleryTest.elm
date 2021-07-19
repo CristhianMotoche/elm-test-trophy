@@ -59,5 +59,16 @@ galleryTest =
            "http://localhost:3000/books"
            (JE.encode 0 <| JE.list G.bookEncoder [])
         |> PT.expectViewHas [ S.text "No books" ]
+    ],
+    describe "when clicking on Next view"
+    [ test "shows newest book" <|
+      \_ ->
+        start
+        |> PT.simulateHttpOk
+           "GET"
+           "http://localhost:3000/books"
+           (JE.encode 0 <| JE.list G.bookEncoder [fixture, fixture, fixture, { fixture | title = "New book" }])
+        |> PT.clickButton "Next"
+        |> PT.expectViewHas [ S.text "New book" ]
     ]
   ]
