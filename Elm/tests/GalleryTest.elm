@@ -70,5 +70,26 @@ galleryTest =
            (JE.encode 0 <| JE.list G.bookEncoder [fixture, fixture, fixture, { fixture | title = "New book" }])
         |> PT.clickButton "Next"
         |> PT.expectViewHas [ S.text "New book" ]
+    , test "hides oldest book" <|
+      \_ ->
+        start
+        |> PT.simulateHttpOk
+           "GET"
+           "http://localhost:3000/books"
+           (JE.encode 0 <| JE.list G.bookEncoder [{ fixture | title = "New book" }, fixture, fixture, fixture])
+        |> PT.clickButton "Next"
+        |> PT.expectViewHasNot [ S.text "New book" ]
+    ],
+    describe "when clicking Next and Prev"
+    [ test "shows oldest book" <|
+      \_ ->
+        start
+        |> PT.simulateHttpOk
+           "GET"
+           "http://localhost:3000/books"
+           (JE.encode 0 <| JE.list G.bookEncoder [{ fixture | title = "New book" }, fixture, fixture, fixture])
+        |> PT.clickButton "Next"
+        |> PT.clickButton "Prev"
+        |> PT.expectViewHas [ S.text "New book" ]
     ]
   ]
