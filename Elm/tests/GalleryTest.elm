@@ -2,14 +2,50 @@ module GalleryTest exposing (..)
 
 
 import Gallery as G
-import Test exposing (Test, test, describe)
+import Test exposing (Test, test, describe, fuzz, fuzz2)
 import ProgramTest as PT
 import Expect as E
+import Fuzz as F
 import Json.Encode as JE
 import Json.Decode as JD
 import Test.Html.Selector as S
 import SimulatedEffect.Cmd as SCmd
 import SimulatedEffect.Http as SHttp
+
+-- Unit tests
+sliceTest : Test
+sliceTest =
+  describe "slice"
+  [ describe "when the list is empty"
+    [ test "returns an empty list" <|
+      \_ ->
+        G.slice 0 1 [] |> E.equal []
+    ]
+  , describe "when the list has values"
+    [ test "returns first elements" <|
+      \_ ->
+        G.slice 3 5 [1,2,3,4,5] |> E.equal [4,5]
+    , test "returns empty lists on the same index" <|
+      \_ ->
+        G.slice 3 3 [1,2,3,4,5] |> E.equal []
+    , test "returns empty lists on the start < end" <|
+      \_ ->
+        G.slice 3 1 [1,2,3,4,5] |> E.equal []
+    ]
+  ]
+
+sliceFuzzyTest : Test
+sliceFuzzyTest =
+  describe "fuzzy slice"
+  [ fuzz (F.list F.int) "returns the whole list on 0 and length" <|
+    \list ->
+      G.slice 0 (List.length list) list |> E.equal list
+  , fuzz2 F.int (F.list F.int) "returns empty list on same index" <|
+    \idx list ->
+      G.slice idx idx list |> E.equal []
+  ]
+
+-- Integration tests
 
 fixture : G.Book
 fixture =
