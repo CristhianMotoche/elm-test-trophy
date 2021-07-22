@@ -7,10 +7,52 @@ import Browser as B
 import Json.Decode as D
 import Json.Encode as E
 
+
+-- Visible
+type alias Visible a =
+  { max: Int
+  , min: Int
+  , list: List a
+  }
+
+startVisible : Int -> List a -> Visible a
+startVisible n ls = Visible n 0 ls
+
+take : Visible a -> List a
+take { min, max, list } = slice min max list
+
+up : Visible a -> Visible a
+up v =
+  { v |
+    max =
+      if v.max < List.length v.list
+      then v.max + 1
+      else v.max
+  , min =
+      if v.max < List.length v.list
+      then v.min + 1
+      else v.min
+  }
+
+down : Visible a -> Visible a
+down v =
+  { v |
+    max =
+      if v.min > 0
+      then v.max - 1
+      else v.max
+  , min =
+      if v.min > 0
+      then v.min - 1
+      else v.min
+  }
+
+isEmpty : Visible a -> Bool
+isEmpty v = List.isEmpty v.list
+
 -- Model
 type alias Model =
-  { books: List Book
-  , start : Int
+  { books: Visible Book
   , errors : List String
   , loading : Bool
   }
@@ -88,8 +130,7 @@ getBooks =
 
 init : (Model, Eff)
 init =
-  ({ books = []
-  , start = 0
+  ({ books = startVisible 3 []
   , errors = []
   , loading = True
   }, getBooks )
@@ -114,9 +155,9 @@ view model =
     case (model.loading, model.errors) of
       (True, _) -> [ H.text "Loading..." ]
       (_, []) ->
-        if List.isEmpty model.books
+        if isEmpty model.books
         then [ H.text "No books" ]
-        else List.map viewBook (slice model.start (model.start + 3) model.books)
+        else List.map viewBook (take model.books)
               ++ [viewActions]
       (_, errors) -> List.map H.text errors
 
@@ -149,24 +190,16 @@ update : Msg -> Model -> (Model, Eff)
 update msg model =
   case msg of
     Next ->
-      ({ model | start =
-        if model.start < List.length model.books - 3
-           then model.start + 1
-           else model.start
-      }, NoOp)
+      ({ model | books = up model.books }, NoOp)
     Prev ->
-      ({ model | start =
-        if model.start > 0
-           then model.start - 1
-           else model.start
-       }, NoOp)
+      ({ model | books = down model.books }, NoOp)
     GetBooks (Ok books)->
       ({ model
-       | books = books, errors = [], loading = False }
+       | errors = [], loading = False, books = startVisible 3 books }
        , NoOp)
     GetBooks _->
       ({ model
-       | books = [], errors = ["Could not get books"], loading = False }
+       | errors = ["Could not get books"], loading = False, books = startVisible 3 [] }
        , NoOp)
 
 main : Program () Model Msg
