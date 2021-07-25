@@ -8,7 +8,7 @@ five : Int
 five = 5
 
 pi : Float
-pi = 3.1415168
+pi = 3.141592
 
 homero : String
 homero = "Homero J. Simpson"
