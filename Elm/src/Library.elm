@@ -48,11 +48,11 @@ fmtAuthor author =
 
 -- Currying
 
-fmtBook_ : Author -> Int -> String -> String
+fmtBook_ : Author -> (Int -> String -> String)
 fmtBook_ author year title =
   title ++ " by " ++ fmtAuthor author ++ " is a " ++ formatByYear year ++ " book"
 
-fmtAnonymous : Int -> String -> String
+fmtAnonymous : Int -> (String -> String)
 fmtAnonymous = fmtBook_ Anonymous
 
 fmtAnonymousClassic : String -> String
