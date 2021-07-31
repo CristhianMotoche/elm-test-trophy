@@ -3,7 +3,6 @@ module Library exposing (..)
 -- Model
 type alias Model =
   { books: List Book
-  , start : Int
   }
 
 type AuthorName
@@ -12,7 +11,7 @@ type AuthorName
 
 type alias Book =
   { title : String
-  , synopsis : String
+  , year : Int
   , author : AuthorName
   }
 
