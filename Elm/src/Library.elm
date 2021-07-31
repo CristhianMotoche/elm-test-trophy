@@ -12,7 +12,9 @@ type alias Book =
   }
 
 type alias Model =
-  { books: List Book }
+  { books: List Book
+  , start : Int
+  }
 
 type Msg
   = Next
