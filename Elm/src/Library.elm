@@ -16,7 +16,7 @@ type AuthorName
 
 type alias Book =
   { title : String
-  , synopsis : String
+  , year : Int
   , author : AuthorName
   }
 
@@ -28,23 +28,23 @@ init : Model
 init =
   { books = [
     { title = "Iliada"
-    , synopsis = "La batalla entre aqueos y troyanos"
+    , year = 0
     , author = Name "Homero"
     },
     { title = "Odisea"
-    , synopsis = "Las aventuras de Odiseo en su camino a Ítaca desde Troya"
+    , year = 0
     , author = Name "Homero"
     },
     { title = "El libro que nunca escribí"
-    , synopsis = "Habla sobre las cosas que nunca dije y las letras que no escribí"
+    , year = 2021
     , author = Anonymous
     },
     { title = "La rebelión de la granja"
-    , synopsis = "¿Cómo terminará la rebelión de los animales?"
+    , year = 1945
     , author = Name "George Orwell"
     },
     { title = "Un mundo feliz"
-    , synopsis = "El mundo ideal donde todos son felices, ¿o no?"
+    , year = 1932
     , author = Name "Aldous Huxley"
     }
   ]
@@ -71,9 +71,16 @@ viewBook book =
     H.div
     []
     [ H.h1 [][ H.text book.title  ]
-    , H.p [][ H.text book.synopsis  ]
+    , H.p [][ H.text <| fmtByYear book.year  ]
     , H.i [][ H.text <| "By "++ authorToString book.author  ]
     ]
+
+fmtByYear : Int -> String
+fmtByYear y =
+  if y <= 0
+  then "BC"
+  else String.fromInt y
+
 
 authorToString : AuthorName -> String
 authorToString author =
