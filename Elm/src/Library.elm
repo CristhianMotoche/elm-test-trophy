@@ -15,7 +15,7 @@ type AuthorName
 
 type alias Book =
   { title : String
-  , synopsis : String
+  , year : Int
   , author : AuthorName
   }
 
@@ -44,7 +44,7 @@ viewBook book =
     H.div
     []
     [ H.h1 [][ H.text book.title  ]
-    , H.p [][ H.text book.synopsis  ]
+    , H.p [][ H.text <| String.fromInt book.year  ]
     , H.i [][ H.text <| "By "++ authorToString book.author  ]
     ]
 
