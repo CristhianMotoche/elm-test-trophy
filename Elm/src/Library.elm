@@ -1,10 +1,6 @@
 module Library exposing (..)
 
 -- Model
-type alias Model =
-  { books: List Book
-  }
-
 type AuthorName
   = Name String
   | Anonymous
@@ -14,6 +10,9 @@ type alias Book =
   , year : Int
   , author : AuthorName
   }
+
+type alias Model =
+  { books: List Book }
 
 type Msg
   = Next
