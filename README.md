@@ -13,6 +13,11 @@ Change to each particular branch to review the code:
 |e4 | MVU - Model|
 |e5 | MVU - View|
 |e6 | MVU - Update|
+|ex1 | Exercise #1|
+|ex1.sol | Solution to Exercise #1|
+|ex2 | Exercise #2|
+|ex2.sol | Solution to Exercise #2|
+|--|--|
 |e7 | JSON Decode/Encode|
 |e8 | Http|
 |e9 | Unit tests|
