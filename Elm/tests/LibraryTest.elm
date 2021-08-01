@@ -26,3 +26,19 @@ sliceFuzzTest =
       L.slice idx idx list
       |> E.equal []
   ]
+
+
+{-
+Tareas:
+  1. Agregar un par de pruebas para `fmtTitle`
+    * Tip use String.contains to check if L.star is present
+-}
+
+
+fmtTitleTest : Test
+fmtTitleTest =
+  describe "fmtTitle"
+  [ todo "Implement: contains star when favorite"
+  , todo "Implement: not contains star when not favorite"
+  ]
+
