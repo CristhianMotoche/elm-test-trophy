@@ -56,6 +56,12 @@ app =
   }
   |> PT.start ()
 
+{-
+Tareas:
+  1. Agregar una prueba para el evento FilterFavs
+  2. Agregar una prueba para el evento Restore
+-}
+
 libraryTest : Test
 libraryTest =
   describe "Library"
@@ -79,4 +85,6 @@ libraryTest =
       |> PT.clickButton "Next"
       |> PT.clickButton "Prev"
       |> PT.expectViewHas [ H.text "Iliada" ]
+  , todo "Implement: click on Filter Favorites"
+  , todo "Implement: click on Restore"
   ]
