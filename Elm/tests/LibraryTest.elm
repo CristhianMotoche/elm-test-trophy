@@ -97,7 +97,11 @@ libraryTest =
         |> Q.findAll [ H.text <| String.fromChar L.star ]
         |> Q.count (E.equal 3)
     in
-      todo "Implement: click on Favorites filters favorite books"
+      test "when click on Favorites filters only favorite books" <|
+      \_ ->
+        app
+        |> PT.clickButton "Filter"
+        |> PT.expectView containStars
   ,
     let
       containBooks view =
@@ -109,5 +113,11 @@ libraryTest =
         |> Q.findAll [ H.text <| String.fromChar L.star ]
         |> Q.count (E.atMost 2)
     in
-      todo "Implement: click on Restore"
+      test "when click on Favorites and then Restore, restarts books list" <|
+      \_ ->
+        app
+        |> PT.clickButton "Filter"
+        |> PT.clickButton "Restore"
+        |> PT.ensureView containBooks
+        |> PT.expectView containStars
   ]
