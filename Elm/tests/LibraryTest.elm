@@ -6,6 +6,7 @@ import Library as L
 import Fuzz as F
 import ProgramTest as PT
 import Test.Html.Selector as H
+import Test.Html.Query as Q
 
 -- Unit test
 
@@ -59,6 +60,8 @@ app =
 {-
 Tareas:
   1. Agregar una prueba para el evento FilterFavs
+   Tips:
+    - Use `PT.expectView` and the `containStars` helper
   2. Agregar una prueba para el evento Restore
 -}
 
@@ -85,6 +88,13 @@ libraryTest =
       |> PT.clickButton "Next"
       |> PT.clickButton "Prev"
       |> PT.expectViewHas [ H.text "Iliada" ]
-  , todo "Implement: click on Filter Favorites"
+  ,
+    let
+      containStars view =
+        view
+        |> Q.findAll [ H.text <| String.fromChar L.star ]
+        |> Q.count (E.equal 3)
+    in
+      todo "Implement: click on Favorites filters favorite books"
   , todo "Implement: click on Restore"
   ]
