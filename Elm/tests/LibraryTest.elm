@@ -63,6 +63,8 @@ Tareas:
    Tips:
     - Use `PT.expectView` and the `containStars` helper
   2. Agregar una prueba para el evento Restore
+   Tips:
+    - Use `PT.ensureView` and the helpers: `containBooks` and `containStars`
 -}
 
 libraryTest : Test
@@ -96,5 +98,16 @@ libraryTest =
         |> Q.count (E.equal 3)
     in
       todo "Implement: click on Favorites filters favorite books"
-  , todo "Implement: click on Restore"
+  ,
+    let
+      containBooks view =
+        view
+        |> Q.findAll [ H.tag "h1" ]
+        |> Q.count (E.equal 3)
+      containStars view =
+        view
+        |> Q.findAll [ H.text <| String.fromChar L.star ]
+        |> Q.count (E.atMost 2)
+    in
+      todo "Implement: click on Restore"
   ]
