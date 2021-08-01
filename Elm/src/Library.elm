@@ -4,6 +4,16 @@ import Browser as B
 import Html as H
 import Html.Events as HE
 
+{-
+  Tareas:
+
+  1. Mostrar el caracter `star` cerca del título cuando el libro es favorito.
+    * Tip: String.fromChar : Char -> String
+-}
+
+star : Char
+star = '⭐'
+
 -- Model
 type alias Model =
   { books: List Book
@@ -18,11 +28,13 @@ type alias Book =
   { title : String
   , year : Int
   , author : AuthorName
+  , favorite : Bool
   }
 
 type Msg
   = Next
   | Prev
+
 
 init : Model
 init =
@@ -30,22 +42,27 @@ init =
     { title = "Iliada"
     , year = 0
     , author = Name "Homero"
+    , favorite = True
     },
     { title = "Odisea"
     , year = 0
     , author = Name "Homero"
+    , favorite = True
     },
     { title = "El libro que nunca escribí"
     , year = 2021
     , author = Anonymous
+    , favorite = False
     },
     { title = "La rebelión de la granja"
     , year = 1945
     , author = Name "George Orwell"
+    , favorite = False
     },
     { title = "Un mundo feliz"
     , year = 1932
     , author = Name "Aldous Huxley"
+    , favorite = True
     }
   ]
   , start = 0
