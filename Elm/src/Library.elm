@@ -4,14 +4,6 @@ import Browser as B
 import Html as H
 import Html.Events as HE
 
-{-
-  Tareas:
-
-  1. Agregar un botón que filtre los libros que sean favoritos (favorite == True)
-      * Tip: Aumentar un posible valor a Msg que filtre (List.filter)
-  2. Agregar un botón que restaure la lista de libros
--}
-
 star : Char
 star = '⭐'
 
@@ -120,6 +112,7 @@ authorToString author =
     Name name -> name
     Anonymous -> "Anonymous"
 
+-- slice start end [1,2,3,4]
 slice : Int -> Int -> List a -> List a
 slice start end list =
   List.drop start
