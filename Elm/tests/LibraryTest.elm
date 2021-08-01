@@ -31,7 +31,9 @@ sliceFuzzTest =
 {-
 Tareas:
   1. Agregar un par de pruebas para `fmtTitle`
-    * Tip use String.contains to check if L.star is present
+    * Tips:
+      - Use String.contains to check if L.star is present
+      - Use E.true and E.false
 -}
 
 bookFixture : L.Book
@@ -45,7 +47,15 @@ bookFixture =
 fmtTitleTest : Test
 fmtTitleTest =
   describe "fmtTitle"
-  [ todo "Implement: contains star when favorite"
-  , todo "Implement: not contains star when not favorite"
+  [ test "contains star when favorite" <|
+    \_ ->
+      L.fmtTitle True "Bubbles"
+      |> String.contains (String.fromChar L.star)
+      |> E.true "should contain star"
+  , test "not contains star when not favorite" <|
+    \_ ->
+      L.fmtTitle False "Hello world!"
+      |> String.contains (String.fromChar L.star)
+      |> E.false "should not contain star"
   ]
 
