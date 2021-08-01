@@ -4,6 +4,10 @@ import Test exposing (..)
 import Expect as E
 import Library as L
 import Fuzz as F
+import ProgramTest as PT
+import Test.Html.Selector as H
+
+-- Unit test
 
 fmtByYearTest : Test
 fmtByYearTest =
@@ -27,16 +31,6 @@ sliceFuzzTest =
       |> E.equal []
   ]
 
-
-{-
-Tareas:
-  1. Agregar un par de pruebas para `fmtTitle`
-    * Tips:
-      - Use String.contains to check if L.star is present
-      - Use E.true and E.false
--}
-
-
 fmtTitleTest : Test
 fmtTitleTest =
   describe "fmtTitle"
@@ -52,3 +46,37 @@ fmtTitleTest =
       |> E.false "should not contain star"
   ]
 
+-- Integration tests
+app : PT.ProgramTest L.Model L.Msg ()
+app =
+  PT.createSandbox {
+    init = L.init
+  , view = L.view
+  , update = L.update
+  }
+  |> PT.start ()
+
+libraryTest : Test
+libraryTest =
+  describe "Library"
+  [ test "when loaded shows Next and Prev buttons" <|
+    \_ ->
+      app
+      |> PT.expectViewHas [ H.text "Prev", H.text "Next" ]
+  , test "when click on Next shows 4th book" <|
+    \_ ->
+      app
+      |> PT.clickButton "Next"
+      |> PT.expectViewHas [ H.text "granja" ]
+  , test "when click on Next hides 1st book" <|
+    \_ ->
+      app
+      |> PT.clickButton "Next"
+      |> PT.expectViewHasNot [ H.text "Iliada" ]
+  , test "when click on Next and Prev showa 1st book" <|
+    \_ ->
+      app
+      |> PT.clickButton "Next"
+      |> PT.clickButton "Prev"
+      |> PT.expectViewHas [ H.text "Iliada" ]
+  ]
