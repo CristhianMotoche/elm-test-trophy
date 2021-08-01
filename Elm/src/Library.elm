@@ -35,6 +35,8 @@ type alias Book =
 type Msg
   = Next
   | Prev
+  | FilterFavs
+  | Restore
 
 
 init : Model
@@ -82,6 +84,8 @@ viewActions =
     []
     [ H.button [ HE.onClick Prev  ][ H.text "Prev"  ]
     , H.button [ HE.onClick Next  ][ H.text "Next"  ]
+    , H.button [ HE.onClick FilterFavs  ][ H.text "Filter Favorites"  ]
+    , H.button [ HE.onClick Restore  ][ H.text "Restore"  ]
     ]
 
 viewBook : Book -> H.Html Msg
@@ -138,6 +142,10 @@ update msg model =
          then model.start - 1
          else model.start
      }
+    FilterFavs ->
+      { model | books = List.filter .favorite init.books, start = 0 }
+    Restore ->
+      { model | books = init.books, start = 0 }
 
 -- Main
 main : Program () Model Msg
