@@ -49,12 +49,12 @@ fmtTitleTest =
   describe "fmtTitle"
   [ test "contains star when favorite" <|
     \_ ->
-      L.fmtTitle True "Bubbles"
+      L.fmtTitle { bookFixture | favorite = True }
       |> String.contains (String.fromChar L.star)
       |> E.true "should contain star"
   , test "not contains star when not favorite" <|
     \_ ->
-      L.fmtTitle False "Hello world!"
+      L.fmtTitle { bookFixture | favorite = False }
       |> String.contains (String.fromChar L.star)
       |> E.false "should not contain star"
   ]
