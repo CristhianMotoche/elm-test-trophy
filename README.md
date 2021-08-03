@@ -13,6 +13,7 @@ Change to each particular branch to review the code:
 |e4 | MVU - Model|
 |e5 | MVU - View|
 |e6 | MVU - Update|
+|e7 | Connect with Browser|
 |ex1 | Exercise #1|
 |ex1.sol | Solution to Exercise #1|
 |ex2 | Exercise #2|
@@ -24,9 +25,3 @@ Change to each particular branch to review the code:
 |tt2 | Integration tests|
 |ex4 | Exercise #4|
 |ex4.sol | Solution to Exercise #4|
-|--|--|
-|e7 | JSON Decode/Encode|
-|e8 | Http|
-|e9 | Unit tests|
-|e10 | Fuzzy tests|
-|e11 | Integration tests|
