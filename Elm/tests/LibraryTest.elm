@@ -21,8 +21,8 @@ fmtByYearTest =
 sliceFuzzTest : Test
 sliceFuzzTest =
   describe "slice fuzz tests"
-  [ fuzz2 (F.list F.int) F.int "when index is the same it returns and empty list" <|
-    \list idx ->
-      L.slice idx idx list
-      |> E.equal []
+  [ fuzz (F.list F.int) "given start = 0 and end = List.length ls, then returns ls" <|
+    \ls ->
+      L.slice 0 (List.length ls) ls
+      |> E.equal ls
   ]
