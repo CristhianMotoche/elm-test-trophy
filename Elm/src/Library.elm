@@ -9,6 +9,7 @@ import Html.Events as HE
 
   1. Mostrar el caracter `star` cerca del título cuando el libro es favorito.
     * Tip: String.fromChar : Char -> String
+    https://package.elm-lang.org/packages/elm/core/1.0.5/String#fromChar
 -}
 
 star : Char
