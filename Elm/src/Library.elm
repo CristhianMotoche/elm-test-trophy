@@ -9,7 +9,8 @@ import Html.Events as HE
 
   1. Agregar un botón que filtre los libros que sean favoritos (favorite == True)
       * Tip: Aumentar un posible valor a Msg que filtre (List.filter)
-  2. Agregar un botón que restaure la lista de libros
+      https://package.elm-lang.org/packages/elm/core/latest/List#filter
+  2. Agregar un botón que restaure la lista de libros (init.book)
 -}
 
 star : Char
