@@ -84,17 +84,14 @@ viewBook : Book -> H.Html Msg
 viewBook book =
     H.div
     []
-    [ viewBookTitle book
+    [ H.h1 [][ H.text <| fmtTitle book ]
     , H.p [][ H.text <| fmtByYear book.year  ]
     , H.i [][ H.text <| "By "++ authorToString book.author  ]
     ]
 
-viewBookTitle : Book -> H.Html Msg
-viewBookTitle { title, favorite } =
-  H.h1 [][ H.text <| fmtTitle favorite title ]
 
-fmtTitle : Bool -> String -> String
-fmtTitle favorite title =
+fmtTitle : Book -> String
+fmtTitle { title, favorite } =
   if favorite
   then title ++ " " ++ String.fromChar star
   else title
