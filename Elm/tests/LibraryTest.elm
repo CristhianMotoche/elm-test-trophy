@@ -34,6 +34,13 @@ Tareas:
     * Tip use String.contains to check if L.star is present
 -}
 
+bookFixture : L.Book
+bookFixture =
+  { title = "Testing"
+  , year = 2021
+  , author = L.Anonymous
+  , favorite = True
+  }
 
 fmtTitleTest : Test
 fmtTitleTest =
