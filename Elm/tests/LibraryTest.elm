@@ -62,9 +62,11 @@ Tareas:
   1. Agregar una prueba para el evento FilterFavs
    Tips:
     - Use `PT.expectView` and the `containStars` helper
+    https://package.elm-lang.org/packages/avh4/elm-program-test/latest/ProgramTest#expectView
   2. Agregar una prueba para el evento Restore
    Tips:
     - Use `PT.ensureView` and the helpers: `containBooks` and `containStars`
+    https://package.elm-lang.org/packages/avh4/elm-program-test/latest/ProgramTest#ensureView
 -}
 
 libraryTest : Test
