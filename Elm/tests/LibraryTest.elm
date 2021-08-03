@@ -32,8 +32,11 @@ sliceFuzzTest =
 Tareas:
   1. Agregar un par de pruebas para `fmtTitle`
     * Tips:
-    - Use String.contains to check if L.star is present
-    -
+      - Use String.contains to check if L.star is present
+      https://package.elm-lang.org/packages/elm/core/1.0.5/String#contains
+      - Use E.true and E.false
+      https://package.elm-lang.org/packages/elm-explorations/test/1.2.2/Expect#true
+      https://package.elm-lang.org/packages/elm-explorations/test/1.2.2/Expect#false
 -}
 
 bookFixture : L.Book
